@@ -4,8 +4,14 @@
     border-radius:12px;
     background:#2b3445;
     color:white;
-    margin:10px;
     text-align:center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+}
+
+.songCard:hover{
+    transform: scale(1.05);
 }
 
 .songCover{
@@ -23,4 +29,11 @@
 .songCard p{
     color:#bdbdbd;
     margin-top:5px;
+}
+.songContainer{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: flex-start;
 }

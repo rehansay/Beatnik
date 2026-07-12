@@ -5,26 +5,46 @@ import "./feed.css"
 function Feed() {
   const [tracks, setTracks]=useState([]);
 
+  const [search, setSearch]=useState("")
+
    useEffect(() => {
-    deezer
-      .get("/search?q=eminem")
+  
+      deezer.get(`/search?q=${search}`)
       .then((response) => {
         console.log(response.data);
-        setTracks(response.data.data);
+        setTracks(response.data.data  || []);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [search]);
 
 return (
-  <div className="songContainer">
-    {tracks.map((track) => (
-      <SongCard
-        key={track.id}
-        track={track}
+
+  <div className="feed-body">
+
+    <div className="search-bar">
+      <input
+
+      type="text"
+      placeholder="Search songs or artists..."
+      value={search}
+      onChange={(e)=> setSearch(e.target.value)}
       />
-    ))}
+
+    </div>
+
+
+
+    <div className="songContainer">
+      {tracks.map((track) => (
+        <SongCard
+          key={track.id}
+          track={track}
+        />
+      ))}
+    </div>
+
   </div>
 );
 }

@@ -1,4 +1,29 @@
 .songContainer{
+    flex:1;
     display:flex;
+    flex-wrap:wrap; 
     gap:20px;
+    justify-content:center;
+    align-content:flex-start;
+    padding:20px;
+
+    /* height: 100%;
+    overflow-y: auto;
+    padding: 20px; */
+}
+
+.search-bar input{
+    width:400px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    outline:none;
+    font-size:16px;
+}
+
+.feed-body{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
 }

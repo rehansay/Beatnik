@@ -1,10 +1,21 @@
 import React from "react";
 import "./songCard.css";
+import {useNavigate} from "react-router-dom"
 
 function SongCard({track}){
+    const navigate=useNavigate();
 
     return(
-        <div className="songCard">
+        <div className="songCard"
+        onClick={()=>
+            navigate("/player", {
+                state: {track },
+            })
+
+        }
+        
+        
+        >
             <img 
             src={track.album.cover_medium}
             alt={track.title}
