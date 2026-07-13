@@ -37,10 +37,12 @@ return (
 
 
     <div className="songContainer">
-      {tracks.map((track) => (
+      {tracks.map((track, index) => (
         <SongCard
           key={track.id}
           track={track}
+          tracks={tracks}
+          index={index}
         />
       ))}
     </div>

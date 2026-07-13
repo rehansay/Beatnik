@@ -1,0 +1,146 @@
+.playerScreen{
+    flex:1;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+
+}
+
+.playerCard{
+    background: #2b3445;
+    width: 380px;
+    overflow:hidden;
+    padding: 30px;
+    border-radius: 20px;
+    color:white;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.playerCover{
+    width:260px;
+    height:260px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:5px solid white;
+
+    margin-bottom:25px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+}
+
+.songTitle{
+    margin:  20px 0 8px;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top:15px
+}
+
+.artistName{
+    margin-top:8px;
+    margin-bottom: 25px;
+    color:#bdbdbd;
+    font-size:20px;
+    font-weight:400;
+}
+
+.controls{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:25px;
+    margin:25px 0;
+}
+.playButton{
+    width:70px;
+    height:70px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#1DB954;
+    color:white;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:26px;
+
+    cursor:pointer;
+
+    transition:.3s ease;
+
+    box-shadow:0 8px 25px rgba(29,185,84,.45);
+}
+
+.playButton:hover{
+    transform:scale(1.08);
+    background:#1ed760;
+}
+
+.sideButton{
+    width:45px;
+    height:45px;
+
+    border:none;
+    border-radius:50%;
+
+    background:transparent;
+    color:white;
+
+    font-size:22px;
+
+    cursor:pointer;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    transition:.3s;
+}
+
+.sideButton:hover{
+    background:rgba(255,255,255,.12);
+    transform:scale(1.1);
+}
+
+.progressBar{
+    width:100%;
+    margin-top:20px;
+
+}
+.time{
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    color:#d8d8d8;
+    margin:15px 0;
+    font-size:14px;
+}
+
+
+
+
+.rotate{
+    animation: spin 10s linear infinite;
+}
+
+@keyframes spin{
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+}

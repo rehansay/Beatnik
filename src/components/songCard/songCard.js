@@ -2,14 +2,18 @@ import React from "react";
 import "./songCard.css";
 import {useNavigate} from "react-router-dom"
 
-function SongCard({track}){
+function SongCard({track, tracks, index}){
     const navigate=useNavigate();
 
     return(
         <div className="songCard"
         onClick={()=>
             navigate("/player", {
-                state: {track },
+                state: {
+                    track,
+                    tracks,
+                    currentIndex:index,
+                },
             })
 
         }

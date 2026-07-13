@@ -1,59 +1,127 @@
-import React, {useState ,useRef} from "react";
+import React, {useState ,useRef,useEffect} from "react";
 import { useLocation } from "react-router-dom";
+import "./player.css"
+import { FaPlay, FaPause } from "react-icons/fa";
+import {
+  IoPlaySkipBack,
+  IoPlaySkipForward,
+} from "react-icons/io5";
+
 
 function Player() {
   const location = useLocation();
 
-  console.log(location);
-  console.log(location.state);
+  const tracks = location.state?.tracks || [];
 
-  const track = location.state?.track;
+  const [currentIndex, setCurrentIndex]=useState(
+    location.state?.currentIndex ||0
+  );
+
+  const track=tracks[currentIndex];
 
   const [isPlaying , setIsPlaying]=useState(false);
 
   const [currentTime, setCurrentTime]=useState(0);
+  
   const[duration, setDuration]=useState(0);
 
   const audioRef=useRef(null);
 
-  const handlePlayPause=()=>{
-    if(isPlaying){
+  const handlePlayPause = () => {
+    if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(false);
-    }
+    } else {
+      audioRef.current
+      .play()
+      .then(()=>{
+        setIsPlaying(true);
+      })
+      .catch(console.error);
+        
 
-    else{
-      audioRef.current.play();
-      setIsPlaying(true);
     }
-  }
+  };
+  const handleNext=()=>{
+    if(currentIndex<tracks.length-1){
+      setCurrentIndex((prev)=>prev+1);
+    }
+  };
+  const handlePrevious=()=>{
+    if(currentIndex>0){
+      setCurrentIndex((prev)=>prev-1);
+    }
+  };
+  
+  useEffect(()=>{
+    if(!audioRef.current) return;
+
+    audioRef.current.load();
+    setCurrentTime(0);
+  },[currentIndex])
+
 
   if (!track) {
     return <h2>Select a song from the Feed page.</h2>;
   }
 
+  const formatTime=(time)=>{
+    if(!time) return "00:00";
+
+    const minutes=Math.floor(time/60);
+    const seconds=Math.floor(time%60)
+
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  }
+console.log(track);
+console.log("Preview URL:", track?.preview);
+
   return (
-    <div>
-      <h1>{track.title}</h1>
-      <h2>{track.artist.name}</h2>
+    <div className="playerScreen">
+      <div className="playerCard">
+        
+      <h1 className="songTitle">
+        {track.title}
+      </h1>
+      <h2 className="artistName">
+        {track.artist.name}
+      </h2>
 
       <img
         src={track.album.cover_big}
         alt={track.title}
-        width="300"
+        className={`playerCover ${isPlaying ? "rotate" : ""}`}
       />
 
+    <div className="controls" >
       <button
-        onClick={handlePlayPause} 
+        className="sideButton"
+        onClick={handlePrevious}
       >
-        {isPlaying?"Pause ⏸️ ": "Play ▶️"}
+         <IoPlaySkipBack size={28} />
       </button>
 
-      <p>
-        {Math.floor(currentTime)} / {Math.floor(duration )} sec
-      </p>
+      <button
+        className="playButton"
+        onClick={handlePlayPause}
+      >
+        {isPlaying ? <FaPause /> : <FaPlay />}
+      </button>
+      <button
+        className="sideButton"
+        onClick={handleNext}
+      >
+        <IoPlaySkipForward size={28} />
+      </button>
+    </div>
+
+      <div className="time">
+    <span>{formatTime(currentTime)}</span>
+    <span>{formatTime(duration)}</span>
+      </div>
 
       <input
+        className="progressBar"
         type="range"
         min="0"
         max={duration}
@@ -75,12 +143,24 @@ function Player() {
         onLoadedMetadata={()=>{
           setDuration(audioRef.current.duration)
         }}
+        onLoadedData={() => {
+          if (isPlaying) {
+            audioRef.current.play().catch(console.error);
+          }
+        }}
+
         onEnded={()=>{
-          setIsPlaying(false);
-          setCurrentTime(0);
+          if(currentIndex<tracks.length-1){
+            setIsPlaying(true);
+            setCurrentIndex((prev)=> prev+1);
+          }else{
+            setIsPlaying(false);
+            setCurrentTime(0);
+          }
         }}
 
       />
+      </div>
     </div>
   );
 }
