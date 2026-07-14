@@ -216,7 +216,31 @@
     accent-color:#1DB954;
 }
 
+.favoriteContainer{
+    width:100%;
 
+    display:flex;
+    justify-content:flex-end;
+
+    margin-bottom:15px;
+}
+
+.favoriteButton{
+    border:none;
+    background:transparent;
+
+    color:#1DB954;
+
+    font-size:28px;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.favoriteButton:hover{
+    transform:scale(1.15);
+}
 
 .rotate{
     animation: spin 10s linear infinite;

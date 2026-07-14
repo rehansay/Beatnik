@@ -7,7 +7,7 @@ import {
   IoPlaySkipForward,
   IoVolumeLow, IoVolumeHigh
 } from "react-icons/io5";
-
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 function Player() {
   const location = useLocation();
@@ -27,6 +27,9 @@ function Player() {
   const[duration, setDuration]=useState(0);
 
   const [volume, setVolume]= useState(1);
+
+
+  const [isFavorite, setIsFavorite] = useState(false);
 
 
   const audioRef=useRef(null);
@@ -77,6 +80,14 @@ function Player() {
     }
   }, [volume]);
 
+  useEffect(()=>{
+    const favorites=JSON.parse(localStorage.getItem("favorites")) || [];
+
+    setIsFavorite(
+      favorites.some((song)=> song.id===track.id)
+    );
+  }, [track]);
+
 
   if (!track) {
     return <h2>Select a song from the Feed page.</h2>;
@@ -93,6 +104,35 @@ function Player() {
   const progress =
   duration > 0 ? (currentTime / duration) * 100 : 0;
   const volumeProgress = volume * 100;
+
+  const toggleFavorite=()=>{
+    const favorites=
+    JSON.parse(localStorage.getItem("favorites"))||[];
+
+    const exists=favorites.some(
+      (song)=>song.id===track.id
+    );
+    if(exists){
+      const updatedFavorites=favorites.filter(
+       (song)=>song.id !==track.id
+     );
+
+    localStorage.setItem(
+      "favorites",
+      JSON.stringify(updatedFavorites)
+    );
+    setIsFavorite(false);
+    }else{
+      favorites.push(track);
+      localStorage.setItem(
+        "favorites",
+        JSON.stringify(favorites)
+      );
+
+      setIsFavorite(true);
+    }
+  }
+
   
 
 
@@ -229,6 +269,15 @@ function Player() {
         }}
 
       />
+
+      <div className="favoriteContainer">
+        <button
+          className="favoriteButton"
+          onClick={toggleFavorite}
+        >
+          {isFavorite ? <FaHeart /> : <FaRegHeart />}
+        </button>
+      </div>
       </div>
     </div>
   );
