@@ -45,7 +45,10 @@ function Feed() {
       finally{
         setLoading(false);
       }
-      
+    
+
+    };
+    fetchSongs();
   
 
   }, [debouncedSearch]);
