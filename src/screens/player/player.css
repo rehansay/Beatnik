@@ -1,14 +1,42 @@
 .playerScreen{
     flex:1;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px;
 
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:30px;
+
+    background-size:cover;
+    background-position:center;
+
+    position:relative;
+
+    overflow:hidden;
+    transition:background-image 0.5s ease;
+}
+.playerScreen::before{
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background: rgba(0,0,0,.70);
+
+    backdrop-filter:blur(10px);
+
+    z-index:0;
 }
 
 .playerCard{
-    background: #2b3445;
+    background: rgba(28,34,48,.55);
+
+    backdrop-filter: blur(18px);
+
+    -webkit-backdrop-filter: blur(18px);
+
+    border:1px solid rgba(255,255,255,.08);
     width: 380px;
     overflow:hidden;
     padding: 30px;
@@ -21,6 +49,8 @@
     align-items: center;
 
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position:relative;
+    z-index:1;
 }
 
 .playerCover{
@@ -31,7 +61,7 @@
 
     object-fit:cover;
 
-    border:5px solid white;
+    border:6px solid rgba(255,255,255,.25);
 
     margin-bottom:25px;
 
@@ -114,10 +144,50 @@
     transform:scale(1.1);
 }
 
+.sideButton:disabled{
+    opacity:0.4;
+    cursor:not-allowed;
+}
+
+.sideButton:disabled:hover{
+    transform:none;
+    background:transparent;
+}
 .progressBar{
     width:100%;
-    margin-top:20px;
+    margin-top:25px;
 
+    -webkit-appearance:none;
+    appearance:none;
+
+    height:8px;
+    border-radius:10px;
+
+    outline:none;
+    cursor:pointer;
+}
+.progressBar::-webkit-slider-thumb{
+    -webkit-appearance:none;
+
+    width:16px;
+    height:16px;
+
+    border-radius:50%;
+    background:#1DB954;
+
+    margin-top:-5px;
+
+    transition:.2s;
+}
+
+
+.progressBar:hover::-webkit-slider-thumb{
+    transform:scale(1.15);
+}
+.progressBar::-webkit-slider-runnable-track{
+    height:6px;
+    border-radius:10px;
+    background:transparent;
 }
 .time{
     width:100%;
@@ -128,6 +198,23 @@
     font-size:14px;
 }
 
+.volumeContainer{
+    width:100%;
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    margin-top:20px;
+}
+
+.volumeSlider{
+    flex:1;
+
+    cursor:pointer;
+
+    accent-color:#1DB954;
+}
 
 
 

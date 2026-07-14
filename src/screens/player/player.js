@@ -5,6 +5,7 @@ import { FaPlay, FaPause } from "react-icons/fa";
 import {
   IoPlaySkipBack,
   IoPlaySkipForward,
+  IoVolumeLow, IoVolumeHigh
 } from "react-icons/io5";
 
 
@@ -17,7 +18,7 @@ function Player() {
     location.state?.currentIndex ||0
   );
 
-  const track=tracks[currentIndex];
+  const track = tracks[currentIndex] ?? null;
 
   const [isPlaying , setIsPlaying]=useState(false);
 
@@ -25,15 +26,17 @@ function Player() {
   
   const[duration, setDuration]=useState(0);
 
+  const [volume, setVolume]= useState(1);
+
+
   const audioRef=useRef(null);
 
   const handlePlayPause = () => {
     if (isPlaying) {
-      audioRef.current.pause();
+      audioRef.current?.pause();
       setIsPlaying(false);
     } else {
-      audioRef.current
-      .play()
+      audioRef.current?.play()
       .then(()=>{
         setIsPlaying(true);
       })
@@ -52,13 +55,27 @@ function Player() {
       setCurrentIndex((prev)=>prev-1);
     }
   };
+
   
-  useEffect(()=>{
-    if(!audioRef.current) return;
+  // useEffect(()=>{
+  //   if(!audioRef.current) return;
+
+  //   audioRef.current.load();
+  //   setCurrentTime(0);
+  // },[currentIndex])
+  useEffect(() => {
+    if (!audioRef.current) return;
 
     audioRef.current.load();
     setCurrentTime(0);
-  },[currentIndex])
+    setDuration(0);
+  }, [currentIndex]);
+
+  useEffect(() => {
+    if(audioRef.current){
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
 
 
   if (!track) {
@@ -73,11 +90,20 @@ function Player() {
 
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
-console.log(track);
-console.log("Preview URL:", track?.preview);
+  const progress =
+  duration > 0 ? (currentTime / duration) * 100 : 0;
+  const volumeProgress = volume * 100;
+  
+
+
 
   return (
-    <div className="playerScreen">
+    <div 
+      className="playerScreen"
+      style={{
+        backgroundImage: `url(${track.album.cover_big})`,
+      }}
+    >
       <div className="playerCard">
         
       <h1 className="songTitle">
@@ -94,7 +120,8 @@ console.log("Preview URL:", track?.preview);
       />
 
     <div className="controls" >
-      <button
+      <button 
+        disabled={currentIndex===0}
         className="sideButton"
         onClick={handlePrevious}
       >
@@ -102,12 +129,14 @@ console.log("Preview URL:", track?.preview);
       </button>
 
       <button
+        
         className="playButton"
         onClick={handlePlayPause}
       >
         {isPlaying ? <FaPause /> : <FaPlay />}
       </button>
       <button
+        disabled={currentIndex===tracks.length-1}
         className="sideButton"
         onClick={handleNext}
       >
@@ -120,32 +149,72 @@ console.log("Preview URL:", track?.preview);
     <span>{formatTime(duration)}</span>
       </div>
 
-      <input
-        className="progressBar"
-        type="range"
-        min="0"
-        max={duration}
-        value={currentTime}
-        onChange={(e)=>{
-          const time=Number(e.target.value)
-          audioRef.current.currentTime=time;
+    <input
+      className="progressBar"
+      type="range"
+      min="0"
+      max={duration}
+      value={currentTime}
+      style={{
+        background: `linear-gradient(
+          to right,
+          #1DB954 ${progress}%,
+          #535353 ${progress}%
+        )`,
+      }}
+      
+      onChange={(e) => {
+          const time = Number(e.target.value);
+
+          audioRef.current.currentTime = time;
           setCurrentTime(time);
-        }}
-      />
+      }}
+    />
+    <div className="volumeContainer">
+        <span><IoVolumeLow size={20} /></span>
+
+        <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            style={{
+                background: `linear-gradient(
+                    to right,
+                    #1DB954 ${volumeProgress}%,
+                    #535353 ${volumeProgress}%
+                )`
+            }}
+
+
+            onChange={(e) => setVolume(Number(e.target.value))}
+            className="volumeSlider"
+        />
+
+        <span><IoVolumeHigh size={20} /></span>
+    </div>
+
 
       <audio 
         ref={audioRef}
         src={track.preview}
+       
 
         onTimeUpdate={()=>{
           setCurrentTime(audioRef.current.currentTime);
         }}
-        onLoadedMetadata={()=>{
-          setDuration(audioRef.current.duration)
-        }}
-        onLoadedData={() => {
+
+        onLoadedMetadata={() => {
+          if (!audioRef.current) return;
+
+          setDuration(audioRef.current.duration);
+
           if (isPlaying) {
-            audioRef.current.play().catch(console.error);
+            audioRef.current
+              .play()
+              .then(() => setIsPlaying(true))
+              .catch(console.error);
           }
         }}
 
