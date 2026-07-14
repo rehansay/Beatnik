@@ -10,6 +10,8 @@ function Feed() {
   const [search, setSearch]=useState("")
 
   const[debouncedSearch, setDebouncedSearch]=useState("");
+
+
   useEffect(() => {
   const timer = setTimeout(() => {
     setDebouncedSearch(search);
@@ -68,11 +70,39 @@ return (
 
     </div>
 
-  {loading ? (
-    <div className="loading">
-      <h2>🎵 Loading songs...</h2>
+{loading ? (
+  <div className="loading">
+    <div className="loader">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
-  ) : (
+
+    <p>Loading music...</p>
+  </div>
+) : search.trim() === "" ? (
+  <div className="emptySearch">
+    <div className="musicIcon">🎵</div>
+
+    <h2>Discover Music</h2>
+
+    <p>
+      Search for your favorite songs or artists
+      to start listening.
+    </p>
+  </div>
+) : tracks.length === 0 ? (
+  <div className="emptySearch">
+    <div className="musicIcon">😕</div>
+
+    <h2>No Songs Found</h2>
+
+    <p>
+      Try searching for another song or artist.
+    </p>
+  </div>  ) : (
     <div className="songContainer">
       {tracks.map((track, index) => (
         <SongCard

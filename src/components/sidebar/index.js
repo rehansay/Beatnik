@@ -8,7 +8,7 @@ import { MdFavorite } from "react-icons/md";
 import { IoLibrary } from "react-icons/io5";
 import { FaSignOutAlt } from "react-icons/fa";
 import deezer from '../../api/deezer';
-import SongCard from '../songCard/songCard';
+// import songCard from '../songCard/songCard';
 
 
 function Sidebar() {
