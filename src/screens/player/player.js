@@ -44,6 +44,7 @@ function Player() {
       audioRef.current?.play()
       .then(()=>{
         setIsPlaying(true);
+        saveRecentlyPlayed();
       })
       .catch(console.error);
         
@@ -62,12 +63,7 @@ function Player() {
   };
 
   
-  // useEffect(()=>{
-  //   if(!audioRef.current) return;
 
-  //   audioRef.current.load();
-  //   setCurrentTime(0);
-  // },[currentIndex])
   useEffect(() => {
     if (!audioRef.current) return;
 
@@ -103,6 +99,33 @@ function Player() {
 
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
+
+
+  const saveRecentlyPlayed=()=>{
+
+    const history=
+    JSON.parse(localStorage.getItem ("recentlyPlayed") || "[]");
+
+    const updatedHistory=history.filter(
+      (song)=>song.id !== track.id
+    );
+
+    updatedHistory.unshift(track);
+
+    localStorage.setItem(
+      "recentlyPlayed",
+      JSON.stringify(updatedHistory.slice(0,10))
+    );
+
+  };
+
+
+
+
+
+
+
+
   const progress =
   duration > 0 ? (currentTime / duration) * 100 : 0;
   const volumeProgress = volume * 100;
@@ -241,7 +264,11 @@ function Player() {
       <audio 
         ref={audioRef}
         src={track.preview}
-       
+
+        onError={() => {
+          setIsPlaying(false);
+          alert("Preview not available for this song.");
+        }}
 
         onTimeUpdate={()=>{
           setCurrentTime(audioRef.current.currentTime);
@@ -255,7 +282,10 @@ function Player() {
           if (isPlaying) {
             audioRef.current
               .play()
-              .then(() => setIsPlaying(true))
+              .then(() => {
+                setIsPlaying(true)
+                saveRecentlyPlayed();
+              })
               .catch(console.error);
           }
         }}
