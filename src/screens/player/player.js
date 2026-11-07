@@ -9,7 +9,7 @@ import {
 } from "react-icons/io5";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 
-function Player() {
+function Player({ onTrackChange }) {
   const location = useLocation();
 
   const tracks = location.state?.tracks || [];
@@ -19,6 +19,10 @@ function Player() {
   );
 
   const track = tracks[currentIndex] ?? null;
+
+  useEffect(() => {
+    onTrackChange?.(track);
+  }, [track, onTrackChange]);
 
   const [isPlaying , setIsPlaying]=useState(false);
 
@@ -79,6 +83,11 @@ function Player() {
   }, [volume]);
 
   useEffect(()=>{
+    if (!track) {
+      setIsFavorite(false);
+      return;
+    }
+
     const favorites=JSON.parse(localStorage.getItem("favorites")) || [];
 
     setIsFavorite(

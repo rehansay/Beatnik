@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react'
+import React,{useState} from 'react'
 import "./sidebar.css"
 import SidebarButton from './sidebarButton'
 import { MdSpaceDashboard } from "react-icons/md";
@@ -7,7 +7,7 @@ import { FaPlay } from "react-icons/fa";
 import { MdFavorite } from "react-icons/md";
 import { IoLibrary } from "react-icons/io5";
 import { FaSignOutAlt } from "react-icons/fa";
-import deezer from '../../api/deezer';
+// import deezer from '../../api/deezer';
 // import songCard from '../songCard/songCard';
 
 
@@ -21,25 +21,25 @@ function Sidebar() {
 
 
 
-  useEffect(()=>{
-    deezer
-      .get("/search?q=eminem")
+  // useEffect(()=>{
+  //   deezer
+  //     .get("/search?q=eminem")
 
-      .then((response)=>{
-        console.log(response.data);
+  //     .then((response)=>{
+  //       console.log(response.data);
 
-        setImage(response.data.data[0].album.cover_big);
+  //       setImage(response.data.data[0].album.cover_big);
         
-        //setTracks(response.data.data);
-        console.log(response.data.data.length);
+  //       //setTracks(response.data.data);
+  //       console.log(response.data.data.length);
         
         
-      })
-      .catch((error)=>{
-        console.log(error);
+  //     })
+  //     .catch((error)=>{
+  //       console.log(error);
         
-      });
-  }, []);
+  //     });
+  // }, []);
   
 
 

@@ -1,0 +1,216 @@
+.trending-page {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: clamp(22px, 4vw, 48px);
+  color: #fff;
+  background: #10151d;
+}
+
+.trending-header {
+  max-width: 1000px;
+  margin: 0 auto 28px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.trending-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  color: #1db954;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.trending-header h1 {
+  margin: 0;
+  font-size: clamp(30px, 5vw, 46px);
+  line-height: 1.1;
+}
+
+.trending-subtitle {
+  margin: 10px 0 0;
+  color: #b7bec9;
+  line-height: 1.5;
+}
+
+.chart-region {
+  flex: 0 0 auto;
+  padding: 9px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 20px;
+  color: #dbe1e8;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.trending-list {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.trending-row {
+  min-height: 82px;
+  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: 36px 60px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  transition: background-color 160ms ease;
+}
+
+.trending-row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.trending-rank {
+  color: #aeb7c3;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.trending-cover {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  background: #252d39;
+  object-fit: cover;
+}
+
+.trending-track-info {
+  min-width: 0;
+}
+
+.trending-track-info h2,
+.trending-track-info p {
+  overflow: hidden;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trending-track-info h2 {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.trending-track-info p {
+  margin-top: 5px;
+  color: #aab3bf;
+  font-size: 14px;
+}
+
+.trending-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trending-play,
+.apple-music-link {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  border-radius: 20px;
+  color: #fff;
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.trending-play {
+  padding: 0 13px;
+  font: inherit;
+  font-size: 13px;
+}
+
+.trending-play:hover:not(:disabled),
+.apple-music-link:hover {
+  border-color: #1db954;
+  color: #1db954;
+}
+
+.trending-play:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.apple-music-link {
+  width: 38px;
+  box-sizing: border-box;
+}
+
+.trending-message {
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  color: #b7bec9;
+  text-align: center;
+}
+
+.trending-message p {
+  max-width: 440px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.trending-message-icon {
+  color: #1db954;
+  font-size: 36px;
+}
+
+.pulse {
+  animation: trending-pulse 1s ease-in-out infinite alternate;
+}
+
+.preview-error {
+  max-width: 1000px;
+  margin: 0 auto 16px;
+  color: #ffb4b4;
+}
+
+@keyframes trending-pulse {
+  to { opacity: 0.35; transform: scale(0.9); }
+}
+
+@media (max-width: 640px) {
+  .trending-page { padding: 22px 12px; }
+  .trending-header { align-items: flex-start; margin-bottom: 18px; }
+  .chart-region { padding: 7px 9px; font-size: 10px; }
+  .trending-row {
+    grid-template-columns: 26px 48px minmax(0, 1fr) 38px;
+    gap: 10px;
+    padding: 9px 4px;
+  }
+  .trending-cover { width: 48px; height: 48px; }
+  .trending-rank { font-size: 15px; }
+  .trending-track-info h2 { font-size: 14px; }
+  .trending-track-info p { font-size: 12px; }
+  .trending-play { width: 38px; padding: 0; }
+  .trending-play span { display: none; }
+  .apple-music-link { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse { animation: none; }
+  .trending-row { transition: none; }
+}

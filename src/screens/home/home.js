@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Library from '../library/library';
 import Feed from '../feed/feed';
@@ -10,7 +10,7 @@ import Sidebar from '../../components/sidebar';
 
 
 function Home() {
- 
+  const [currentTrack, setCurrentTrack] = useState(null);
 
 
 
@@ -19,12 +19,12 @@ function Home() {
         <div className='main-body'>
 
         
-        <Sidebar />
+        <Sidebar currentTrack={currentTrack} />
 
         <Routes>
             <Route path="/" element={<Feed/>}/>
             <Route path="/library" element={<Library/>}/>
-            <Route path="/player" element={<Player/>}/>
+            <Route path="/player" element={<Player onTrackChange={setCurrentTrack} />}/>
             <Route path="/trending" element={<Trending/>}/>
             <Route path="/favorites" element={<Favorites/>}/>
         </Routes>
