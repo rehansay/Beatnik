@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaFrown, FaMusic, FaSearch, FaTimes } from 'react-icons/fa';
-import deezer from '../../api/deezer';
+import backend from '../../api/backend';
 import SongCard from '../../components/songCard/songCard';
 import './feed.css';
 
@@ -34,7 +34,7 @@ function Feed() {
       setError('');
 
       try {
-        const response = await deezer.get('/search', {
+        const response = await backend.get('/api/search', {
           params: { q: query },
           signal: controller.signal,
         });

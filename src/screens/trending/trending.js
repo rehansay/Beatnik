@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaChartLine, FaExclamationCircle, FaExternalLinkAlt, FaMusic, FaPlay } from 'react-icons/fa';
 import backend from '../../api/backend';
-import deezer from '../../api/deezer';
+import { usePlayer } from '../../context/PlayerContext';
 import './trending.css';
 
 const normalize = (value = '') => value
@@ -18,6 +18,7 @@ function Trending() {
   const [previewError, setPreviewError] = useState('');
   const [loadingTrackId, setLoadingTrackId] = useState(null);
   const navigate = useNavigate();
+  const { selectQueue } = usePlayer();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -47,7 +48,7 @@ function Trending() {
     setPreviewError('');
 
     try {
-      const response = await deezer.get('/search', {
+      const response = await backend.get('/api/search', {
         params: { q: `${chartTrack.artistName} ${chartTrack.name}` },
       });
       const candidates = response.data?.data || [];
@@ -62,9 +63,8 @@ function Trending() {
         return;
       }
 
-      navigate('/player', {
-        state: { tracks: [playableTrack], currentIndex: 0 },
-      });
+      selectQueue([playableTrack], 0);
+      navigate('/player');
     } catch (requestError) {
       setPreviewError('Could not find a preview for this song. Please try again.');
     } finally {

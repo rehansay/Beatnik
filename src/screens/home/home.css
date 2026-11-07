@@ -1,12 +1,9 @@
-.main-body{
-    height:100vh;
-    width: 100vw;
-    background-color: #E99D72;
-    border-radius: 30px;
-    display:flex;
-
-}
-.screen-container{
-    flex:1;
-    display:flex;
+.main-body {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  overflow: hidden;
+  color: var(--beatnik-text);
+  background: var(--beatnik-bg);
 }

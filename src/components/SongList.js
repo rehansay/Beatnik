@@ -39,25 +39,32 @@ const SongList = ({
     <div>
         <h1>{title}</h1>
       {songs.map((song, index) => (
-        <div 
+        <div
           className="favoriteCard"
           key={song.id}
-          onClick={()=>onSongClick(index)}
         >
-          <img
-          className='favoriteImage'
-            src={song.album.cover_medium}
-            alt={song.title}
-            width={80}
-          
-          />
-        <div className="favoriteInfo">
-          <h3>{song.title}</h3>
-          <p>{song.artist.name}</p>
-        </div>
+          <button
+            className="favoriteTrackButton"
+            type="button"
+            onClick={() => onSongClick(index)}
+            aria-label={`Play ${song.title} by ${song.artist?.name || 'unknown artist'}`}
+          >
+            <img
+              className="favoriteImage"
+              src={song.album?.cover_medium}
+              alt=""
+              width={80}
+            />
+            <span className="favoriteInfo">
+              <strong>{song.title}</strong>
+              <span>{song.artist?.name || 'Unknown artist'}</span>
+            </span>
+          </button>
 
           <button 
             className="removeButton"
+            type="button"
+            aria-label={`Remove ${song.title} from Favorites`}
             onClick={(e)=>{
               e.stopPropagation();
               onRemove(song.id);

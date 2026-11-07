@@ -1,29 +1,30 @@
-a{
-    text-decoration: none !important;
-}
 .btn-body{
     height:80px;
     width:80px;
     border-radius:20px;
-    color: #423f3c;  /* #F8D9C0 */
+    color: var(--beatnik-muted);
     display:flex;
     align-items: center;
     justify-content:center;
     flex-direction: column;
     margin:5px auto;
-    transition:all 0.7s ease;
-    background-color: rgba(244, 187, 146, 0.0);
+    transition:background-color 160ms ease, color 160ms ease, transform 160ms ease;
+    background-color: transparent;
 
 }
 
 .btn-body.active{
-    background-color: rgba(244, 187, 146, 1);
-    color: #fff;
-    transform:scale(1.05)
+    background-color: rgba(29, 185, 84, 0.16);
+    color: var(--beatnik-accent-bright);
 }
 
 .btn-body:hover{
-    color:#fff;
+    color:var(--beatnik-text);
+    background-color:rgba(255,255,255,.06);
+}
+.btn-body.active:hover{
+    color:var(--beatnik-accent-bright);
+    background-color:rgba(29,185,84,.2);
 }
 .btn-title{
     margin: 4px auto;

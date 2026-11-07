@@ -1,22 +1,18 @@
 import React from "react";
 import "./songCard.css";
 import {useNavigate} from "react-router-dom"
+import { usePlayer } from '../../context/PlayerContext';
 
 function SongCard({track, tracks, index}){
     const navigate=useNavigate();
+    const { selectQueue } = usePlayer();
 
     return(
         <div className="songCard"
-        onClick={()=>
-            navigate("/player", {
-                state: {
-                    track,
-                    tracks,
-                    currentIndex:index,
-                },
-            })
-
-        }
+        onClick={() => {
+            selectQueue(tracks?.length ? tracks : [track], index || 0);
+            navigate("/player");
+        }}
         
         
         >

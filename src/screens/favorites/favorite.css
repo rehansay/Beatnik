@@ -1,6 +1,9 @@
 .favoritesPage{
-    padding:40px;
-    color:white;
+    min-width:0;
+    flex:1;
+    overflow-y:auto;
+    padding:clamp(22px, 4vw, 40px) clamp(16px, 4vw, 40px) 110px;
+    color:var(--beatnik-text);
 }
 
 .favoriteCard{
@@ -10,7 +13,7 @@
 
     gap:20px;
 
-    background:#2b3445;
+    background:var(--beatnik-surface);
 
     padding:15px 20px;
 
@@ -20,13 +23,26 @@
 
     cursor:pointer;
 
-    transition:.3s ease;
+    transition:background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.favoriteTrackButton{
+    min-width:0;
+    flex:1;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    padding:0;
+    border:0;
+    color:inherit;
+    background:transparent;
+    text-align:left;
+    cursor:pointer;
 }
 
 .favoriteCard:hover{
-    transform:translateY(-4px) scale(1.02);
-    background:#364258;
-    box-shadow:0 10px 25px rgba(0,0,0,.35);
+    background:var(--beatnik-surface-raised);
+    box-shadow:0 8px 20px rgba(0,0,0,.22);
 }
 
 .favoriteImage{
@@ -41,26 +57,36 @@
 }
 
 .favoriteInfo{
-
+    min-width:0;
     flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
 }
 
-.favoriteInfo h3{
+.favoriteInfo strong{
+    overflow:hidden;
     margin:0;
     font-size:20px;
     font-weight:700;
+    text-overflow:ellipsis;
+    white-space:nowrap;
 }
 
-.favoriteInfo p{
+.favoriteInfo span{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    color:var(--beatnik-muted);
+}
 
-    margin-top:8px;
-
-    color:#b5b5b5;
+.favorite-storage-error{
+    color:var(--beatnik-danger);
 }
 .removeButton{
     border:none;
     background:none;
-    color:#1DB954;
+    color:var(--beatnik-accent);
     cursor:pointer;
     font-size:24px;
     transition:.25s;
@@ -81,20 +107,22 @@
 
     align-items:center;
 
-    min-height:100vh;
-    width:100%;
-
-    color:rgb(0, 0, 0);
+    min-height:0;
+    min-width:0;
+    flex:1;
+    padding-bottom:110px;
+    color:var(--beatnik-text);
 
     text-align:center;
 }
 .emptyIcon{
     font-size:90px;
     margin-bottom:25px;
+    color:var(--beatnik-accent);
 }
 
 .emptyFavorites h2{
-    font-size:42px;
+    font-size:clamp(26px, 4vw, 38px);
     margin-bottom:18px;
 }
 
@@ -102,7 +130,7 @@
     font-size:18px;
     max-width:420px;
     line-height:1.8;
-    color:#000000;
+    color:var(--beatnik-muted);
     margin-bottom:40px;
 }
 .feedButton{
@@ -113,9 +141,9 @@
 
     border-radius:40px;
 
-    background:#1DB954;
+    background:var(--beatnik-accent);
 
-    color:white;
+    color:var(--beatnik-bg);
 
     font-size:17px;
     font-weight:600;
@@ -125,7 +153,17 @@
     transition:.3s ease;
 }
 
+@media(max-width:600px){
+    .favoriteCard{gap:10px; padding:12px;}
+    .favoriteTrackButton{gap:12px;}
+    .favoriteImage{width:56px; height:56px;}
+    .favoriteInfo strong{font-size:15px;}
+    .favoriteInfo span{font-size:13px;}
+    .removeButton{font-size:20px;}
+}
+
 .feedButton:hover{
     transform:translateY(-3px);
     box-shadow:0 10px 25px rgba(29,185,84,.35);
+    background:var(--beatnik-accent-bright);
 }

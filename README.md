@@ -1,70 +1,92 @@
-# Getting Started with Create React App
+# Beatnik
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Beatnik is a React music discovery app with a FastAPI backend. The frontend
+handles the screens and playback; the backend serves trending charts and
+forwards search requests to Deezer using a server-side RapidAPI key.
 
-## Available Scripts
+## Run locally
 
-In the project directory, you can run:
+You need Node.js/npm and Python installed. From the repository root, create
+your local environment file:
 
-### `npm start`
+```powershell
+Copy-Item .env.example .env
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Open `.env` and replace `RAPIDAPI_KEY` with your RapidAPI key. Keep `.env`
+private; it is ignored by Git.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Start the backend in **Terminal 1**:
 
-### `npm test`
+```powershell
+Set-Location .\backend
+py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Start the frontend in **Terminal 2**, from the repository root:
 
-### `npm run build`
+```powershell
+npm install
+npm start
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Open `http://localhost:3000`. Keep both processes running. The frontend uses
+`http://127.0.0.1:8000` for the API by default. Check that the backend is
+available at `http://127.0.0.1:8000/health`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Verify changes
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Run the React component and interaction checks from the repository root:
 
-### `npm run eject`
+```powershell
+npm test -- --watchAll=false --runInBand
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The current checks cover Feed search states, Favorites persistence and removal,
+the Player empty state, and playback continuity while navigating between app
+sections.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Environment settings
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+| Variable | Used by | Purpose |
+| --- | --- | --- |
+| `RAPIDAPI_KEY` | Backend | Required key for Deezer search through RapidAPI. |
+| `RAPIDAPI_HOST` | Backend | RapidAPI host; defaults to `deezerdevs-deezer.p.rapidapi.com`. |
+| `BEATNIK_CORS_ORIGINS` | Backend | Comma-separated exact frontend origins allowed to call the API. Defaults to the two local React origins. |
+| `REACT_APP_BACKEND_URL` | Frontend build | Base URL for FastAPI. Defaults to `http://127.0.0.1:8000`. |
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Only put public configuration in `REACT_APP_` variables. React embeds those
+values into the browser build, so never put API keys or other secrets there.
 
-## Learn More
+## Deployment
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Deploy the React `build` output as a static site and run `backend/` as a Python
+ASGI web service. Configure the service settings as follows:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+**Frontend static site**
 
-### Code Splitting
+- Build command: `npm install && npm run build`
+- Publish directory: `build`
+- Build environment variable: `REACT_APP_BACKEND_URL=https://<your-api-domain>`
+- Configure a single-page-app fallback so unknown paths serve `/index.html`;
+  this lets React Router routes such as `/trending` work after a page refresh.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+**FastAPI web service**
 
-### Analyzing the Bundle Size
+- Root directory: `backend` (or set the service working directory to it)
+- Install command: `pip install -r requirements.txt`
+- Start command: `uvicorn app.main:app --host 0.0.0.0 --port <platform-port>`
+- Runtime environment variables: `RAPIDAPI_KEY` and
+  `BEATNIK_CORS_ORIGINS=https://<your-frontend-domain>`
+- Add `RAPIDAPI_HOST` only if using a non-default RapidAPI host.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Use the actual HTTPS origins assigned by your host, with no path or trailing
+slash. If a custom domain or preview domain also needs access, add each exact
+origin as a comma-separated value. Set the frontend API URL and backend CORS
+origins to match the deployed services, then redeploy both so the settings take
+effect. Verify `/health`, `/api/trending`, and a Feed search on the live site.
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+See [backend/README.md](backend/README.md) for the API routes and backend
+details.

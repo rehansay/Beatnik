@@ -2,9 +2,9 @@
   flex: 1;
   min-width: 0;
   overflow-y: auto;
-  padding: clamp(22px, 4vw, 48px);
-  color: #fff;
-  background: #10151d;
+  padding: clamp(22px, 4vw, 48px) clamp(22px, 4vw, 48px) 110px;
+  color: var(--beatnik-text);
+  background: var(--beatnik-bg);
 }
 
 .trending-header {
@@ -21,7 +21,7 @@
   align-items: center;
   gap: 8px;
   margin: 0 0 10px;
-  color: #1db954;
+  color: var(--beatnik-accent);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -35,7 +35,7 @@
 
 .trending-subtitle {
   margin: 10px 0 0;
-  color: #b7bec9;
+  color: var(--beatnik-muted);
   line-height: 1.5;
 }
 
@@ -44,7 +44,7 @@
   padding: 9px 13px;
   border: 1px solid rgba(255, 255, 255, 0.13);
   border-radius: 20px;
-  color: #dbe1e8;
+  color: var(--beatnik-text);
   background: rgba(255, 255, 255, 0.06);
   font-size: 12px;
   font-weight: 700;
@@ -75,7 +75,7 @@
 }
 
 .trending-rank {
-  color: #aeb7c3;
+  color: var(--beatnik-muted);
   font-size: 18px;
   font-weight: 700;
   text-align: center;
@@ -85,7 +85,7 @@
   width: 60px;
   height: 60px;
   border-radius: 8px;
-  background: #252d39;
+  background: var(--beatnik-surface-raised);
   object-fit: cover;
 }
 
@@ -102,14 +102,14 @@
 }
 
 .trending-track-info h2 {
-  color: #fff;
+  color: var(--beatnik-text);
   font-size: 16px;
   font-weight: 650;
 }
 
 .trending-track-info p {
   margin-top: 5px;
-  color: #aab3bf;
+  color: var(--beatnik-muted);
   font-size: 14px;
 }
 
@@ -128,7 +128,7 @@
   gap: 8px;
   border: 1px solid rgba(255, 255, 255, 0.17);
   border-radius: 20px;
-  color: #fff;
+  color: var(--beatnik-text);
   background: transparent;
   cursor: pointer;
   text-decoration: none;
@@ -142,8 +142,8 @@
 
 .trending-play:hover:not(:disabled),
 .apple-music-link:hover {
-  border-color: #1db954;
-  color: #1db954;
+  border-color: var(--beatnik-accent);
+  color: var(--beatnik-accent);
 }
 
 .trending-play:disabled {
@@ -163,7 +163,7 @@
   justify-content: center;
   align-items: center;
   gap: 14px;
-  color: #b7bec9;
+  color: var(--beatnik-muted);
   text-align: center;
 }
 
@@ -174,7 +174,7 @@
 }
 
 .trending-message-icon {
-  color: #1db954;
+  color: var(--beatnik-accent);
   font-size: 36px;
 }
 
@@ -185,7 +185,7 @@
 .preview-error {
   max-width: 1000px;
   margin: 0 auto 16px;
-  color: #ffb4b4;
+  color: var(--beatnik-danger);
 }
 
 @keyframes trending-pulse {
@@ -193,7 +193,7 @@
 }
 
 @media (max-width: 640px) {
-  .trending-page { padding: 22px 12px; }
+  .trending-page { padding: 22px 12px 110px; }
   .trending-header { align-items: flex-start; margin-bottom: 18px; }
   .chart-region { padding: 7px 9px; font-size: 10px; }
   .trending-row {

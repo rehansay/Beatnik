@@ -1,257 +1,244 @@
-.playerScreen{
-    flex:1;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    padding:30px;
-
-    background-size:cover;
-    background-position:center;
-
-    position:relative;
-
-    overflow:hidden;
-    transition:background-image 0.5s ease;
-}
-.playerScreen::before{
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    background: rgba(0,0,0,.70);
-
-    backdrop-filter:blur(10px);
-
-    z-index:0;
+.playerScreen {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+  padding: clamp(18px, 4vw, 36px);
+  background-color: var(--beatnik-bg);
+  background-position: center;
+  background-size: cover;
 }
 
-.playerCard{
-    background: rgba(28,34,48,.55);
-
-    backdrop-filter: blur(18px);
-
-    -webkit-backdrop-filter: blur(18px);
-
-    border:1px solid rgba(255,255,255,.08);
-    width: 380px;
-    overflow:hidden;
-    padding: 30px;
-    border-radius: 20px;
-    color:white;
-    text-align: center;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    position:relative;
-    z-index:1;
+.playerScreen::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(8, 12, 18, 0.76);
+  content: '';
+  backdrop-filter: blur(12px);
 }
 
-.playerCover{
-    width:260px;
-    height:260px;
-
-    border-radius:50%;
-
-    object-fit:cover;
-
-    border:6px solid rgba(255,255,255,.25);
-
-    margin-bottom:25px;
-
-    box-shadow:0 15px 35px rgba(0,0,0,.35);
+.playerEmptyState {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  color: var(--beatnik-text);
+  text-align: center;
 }
 
-.songTitle{
-    margin:  20px 0 8px;
-    font-size: 30px;
-    font-weight: bold;
-    margin-top:15px
+.playerEmptyState p {
+  color: var(--beatnik-muted);
 }
 
-.artistName{
-    margin-top:8px;
-    margin-bottom: 25px;
-    color:#bdbdbd;
-    font-size:20px;
-    font-weight:400;
+.playerEmptyState a {
+  color: var(--beatnik-accent-bright);
 }
 
-.controls{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:25px;
-    margin:25px 0;
-}
-.playButton{
-    width:70px;
-    height:70px;
-
-    border:none;
-    border-radius:50%;
-
-    background:#1DB954;
-    color:white;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    font-size:26px;
-
-    cursor:pointer;
-
-    transition:.3s ease;
-
-    box-shadow:0 8px 25px rgba(29,185,84,.45);
+.playerCard {
+  position: relative;
+  z-index: 1;
+  width: min(420px, 100%);
+  padding: clamp(20px, 4vw, 30px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--beatnik-border);
+  border-radius: 22px;
+  color: var(--beatnik-text);
+  background: rgba(26, 34, 46, 0.86);
+  text-align: center;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.36);
+  backdrop-filter: blur(18px);
 }
 
-.playButton:hover{
-    transform:scale(1.08);
-    background:#1ed760;
+.songTitle {
+  max-width: 100%;
+  margin: 6px 0 8px;
+  overflow: hidden;
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.sideButton{
-    width:45px;
-    height:45px;
-
-    border:none;
-    border-radius:50%;
-
-    background:transparent;
-    color:white;
-
-    font-size:22px;
-
-    cursor:pointer;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    transition:.3s;
+.artistName {
+  max-width: 100%;
+  margin: 0 0 20px;
+  overflow: hidden;
+  color: var(--beatnik-muted);
+  font-size: 17px;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.sideButton:hover{
-    background:rgba(255,255,255,.12);
-    transform:scale(1.1);
+.playerCover {
+  width: min(250px, 64vw);
+  aspect-ratio: 1;
+  margin-bottom: 16px;
+  border: 5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.34);
 }
 
-.sideButton:disabled{
-    opacity:0.4;
-    cursor:not-allowed;
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 22px;
+  margin: 12px 0;
 }
 
-.sideButton:disabled:hover{
-    transform:none;
-    background:transparent;
-}
-.progressBar{
-    width:100%;
-    margin-top:25px;
-
-    -webkit-appearance:none;
-    appearance:none;
-
-    height:8px;
-    border-radius:10px;
-
-    outline:none;
-    cursor:pointer;
-}
-.progressBar::-webkit-slider-thumb{
-    -webkit-appearance:none;
-
-    width:16px;
-    height:16px;
-
-    border-radius:50%;
-    background:#1DB954;
-
-    margin-top:-5px;
-
-    transition:.2s;
+.playButton,
+.sideButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: var(--beatnik-text);
+  cursor: pointer;
+  transition: transform 160ms ease, background-color 160ms ease, color 160ms ease;
 }
 
-
-.progressBar:hover::-webkit-slider-thumb{
-    transform:scale(1.15);
-}
-.progressBar::-webkit-slider-runnable-track{
-    height:6px;
-    border-radius:10px;
-    background:transparent;
-}
-.time{
-    width:100%;
-    display:flex;
-    justify-content:space-between;
-    color:#d8d8d8;
-    margin:15px 0;
-    font-size:14px;
+.playButton {
+  width: 64px;
+  height: 64px;
+  color: var(--beatnik-bg);
+  background: var(--beatnik-accent);
+  font-size: 23px;
+  box-shadow: 0 8px 24px rgba(29, 185, 84, 0.28);
 }
 
-.volumeContainer{
-    width:100%;
-
-    display:flex;
-    align-items:center;
-    gap:12px;
-
-    margin-top:20px;
+.playButton:hover {
+  transform: scale(1.06);
+  background: var(--beatnik-accent-bright);
 }
 
-.volumeSlider{
-    flex:1;
-
-    cursor:pointer;
-
-    accent-color:#1DB954;
+.sideButton {
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  font-size: 21px;
 }
 
-.favoriteContainer{
-    width:100%;
-
-    display:flex;
-    justify-content:flex-end;
-
-    margin-bottom:15px;
+.sideButton:hover:not(:disabled) {
+  color: var(--beatnik-accent-bright);
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.favoriteButton{
-    border:none;
-    background:transparent;
-
-    color:#1DB954;
-
-    font-size:28px;
-
-    cursor:pointer;
-
-    transition:.25s;
+.sideButton:disabled {
+  cursor: default;
+  opacity: 0.36;
 }
 
-.favoriteButton:hover{
-    transform:scale(1.15);
+.time {
+  width: 100%;
+  margin: 8px 0;
+  display: flex;
+  justify-content: space-between;
+  color: var(--beatnik-muted);
+  font-size: 12px;
 }
 
-.rotate{
-    animation: spin 10s linear infinite;
+.progressBar {
+  width: 100%;
+  height: 7px;
+  margin: 4px 0 14px;
+  border-radius: 10px;
+  appearance: none;
+  cursor: pointer;
 }
 
-@keyframes spin{
-    from{
-        transform:rotate(0deg);
-    }
+.progressBar:disabled {
+  cursor: default;
+}
 
-    to{
-        transform:rotate(360deg);
-    }
+.progressBar::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  appearance: none;
+  background: var(--beatnik-accent);
+}
+
+.progressBar::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--beatnik-accent);
+}
+
+.volumeContainer {
+  width: 100%;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--beatnik-muted);
+}
+
+.volumeSlider {
+  flex: 1;
+  accent-color: var(--beatnik-accent);
+  cursor: pointer;
+}
+
+.favoriteContainer {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.favoriteButton {
+  border: 0;
+  color: var(--beatnik-accent);
+  background: transparent;
+  font-size: 25px;
+  cursor: pointer;
+  transition: transform 160ms ease;
+}
+
+.favoriteButton:hover {
+  transform: scale(1.12);
+}
+
+.playbackError {
+  margin: 12px 0 0;
+  color: var(--beatnik-danger);
+  font-size: 13px;
+}
+
+.rotate {
+  animation: spin 10s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-height: 720px) {
+  .playerScreen { align-items: flex-start; }
+  .playerCover { width: min(190px, 44vh); }
+  .playerCard { margin: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rotate { animation: none; }
+  .playButton,
+  .sideButton,
+  .favoriteButton { transition: none; }
 }

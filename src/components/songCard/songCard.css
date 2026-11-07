@@ -1,32 +1,29 @@
 .songCard{
     width:220px;
+    min-width:0;
     padding:15px;
-    border-radius:12px;
-    /* background:#2b3445; */
-    color:white;
+    border-radius:14px;
+    color:var(--beatnik-text);
     text-align:center;
     transition: all 0.3s ease;
     cursor: pointer;
 
-    background: rgba(28,34,48,.55);
-
-    backdrop-filter: blur(18px);
-
-    -webkit-backdrop-filter: blur(18px);
-
-    border:1px solid rgba(255,255,255,.08);
-    
+    background:var(--beatnik-surface);
+    border:1px solid var(--beatnik-border);
 
 
 }
 
 .songCard:hover{
-    transform: scale(1.05);
+    transform: translateY(-4px);
+    background:var(--beatnik-surface-raised);
+    box-shadow:0 12px 26px rgba(0,0,0,.24);
 }
 
 .songCover{
-    width:180px;
-    height:180px;
+    width:100%;
+    aspect-ratio:1;
+    height:auto;
     border-radius:10px;
     object-fit:cover;
 }
@@ -37,8 +34,11 @@
 }
 
 .songCard p{
-    color:#bdbdbd;
+    overflow:hidden;
+    color:var(--beatnik-muted);
     margin-top:5px;
+    text-overflow:ellipsis;
+    white-space:nowrap;
 }
 .songContainer{
     display: flex;
@@ -46,4 +46,13 @@
     gap: 20px;
     justify-content: center;
     align-items: flex-start;
+}
+
+@media (max-width:600px){
+    .songCard{width:min(46%, 220px); padding:11px;}
+    .songCard h3{font-size:15px;}
+}
+
+@media (prefers-reduced-motion:reduce){
+    .songCard{transition:none;}
 }

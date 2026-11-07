@@ -1,0 +1,139 @@
+.persistent-player-bar {
+  position: fixed;
+  z-index: 20;
+  right: 0;
+  bottom: 0;
+  left: 100px;
+  min-height: 76px;
+  padding: 10px clamp(14px, 3vw, 32px);
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) auto minmax(180px, 1fr);
+  align-items: center;
+  gap: 24px;
+  box-sizing: border-box;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--beatnik-text);
+  background: rgba(16, 21, 29, 0.97);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.persistent-track {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.persistent-track img {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  border-radius: 6px;
+  background: #252d39;
+  object-fit: cover;
+}
+
+.persistent-track > span {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.persistent-track strong,
+.persistent-track > span > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.persistent-track strong {
+  font-size: 13px;
+}
+
+.persistent-track > span > span {
+  color: var(--beatnik-muted);
+  font-size: 12px;
+}
+
+.persistent-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.persistent-controls button {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: #dbe1e8;
+  background: transparent;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.persistent-controls button:hover:not(:disabled) {
+  color: var(--beatnik-accent);
+}
+
+.persistent-controls button:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+
+.persistent-controls .persistent-play-button {
+  color: var(--beatnik-bg);
+  background: var(--beatnik-accent);
+}
+
+.persistent-controls .persistent-play-button:hover:not(:disabled) {
+  color: var(--beatnik-bg);
+  background: var(--beatnik-accent-bright);
+}
+
+.persistent-progress {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--beatnik-muted);
+  font-size: 10px;
+}
+
+.persistent-progress input {
+  width: 100%;
+  min-width: 0;
+  accent-color: var(--beatnik-accent);
+}
+
+@media (max-width: 700px) {
+  .persistent-player-bar {
+    left: 100px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 8px 12px;
+  }
+
+  .persistent-progress {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .persistent-track img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .persistent-controls {
+    gap: 4px;
+  }
+}
