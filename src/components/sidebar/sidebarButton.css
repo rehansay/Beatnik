@@ -1,13 +1,13 @@
 .btn-body{
-    height:80px;
-    width:80px;
-    border-radius:20px;
+    height:68px;
+    width:88px;
+    border-radius:16px;
     color: var(--beatnik-muted);
     display:flex;
     align-items: center;
     justify-content:center;
     flex-direction: column;
-    margin:5px auto;
+    margin:0 auto;
     transition:background-color 160ms ease, color 160ms ease, transform 160ms ease;
     background-color: transparent;
 
@@ -27,8 +27,14 @@
     background-color:rgba(29,185,84,.2);
 }
 .btn-title{
-    margin: 4px auto;
+    margin: 3px auto 0;
     font-weight:600;
-    font-size:14px;
+    font-size:12px;
+    line-height:1.2;
 
+}
+
+@media (max-height: 620px) {
+    .btn-body { height:54px; border-radius:13px; }
+    .btn-title { font-size:11px; }
 }

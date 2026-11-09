@@ -1,92 +1,107 @@
 # Beatnik
 
-Beatnik is a React music discovery app with a FastAPI backend. The frontend
-handles the screens and playback; the backend serves trending charts and
-forwards search requests to Deezer using a server-side RapidAPI key.
+Beatnik is a React music discovery and preview app with a FastAPI backend and a
+Neon PostgreSQL database. It uses Apple’s public Top Songs feed for Trending
+and Deezer search through RapidAPI for playable previews.
+
+## Features
+
+- Search music and browse the Apple Music Trending chart.
+- Preview tracks with persistent playback controls.
+- Sign in with Google or create an account with email and password.
+- Save favorites and listening history to Neon while signed in. Guests keep
+  using browser storage.
+- Create playlists in Library, add or remove saved tracks, and play playlists.
+- Add the current track to a playlist from the Player screen.
+- Beatnik logo in the top bar, with Feed, Trending, Player, Favorites, Library,
+  and Account navigation in the left sidebar.
 
 ## Run locally
 
-You need Node.js/npm and Python installed. From the repository root, create
-your local environment file:
+You need Node.js/npm and Python. From the repository root, create the local
+environment file:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Open `.env` and replace `RAPIDAPI_KEY` with your RapidAPI key. Keep `.env`
-private; it is ignored by Git.
+Fill in the private values in `.env`: RapidAPI credentials, Google OAuth
+credentials, a random `BEATNIK_JWT_SECRET`, and the Neon `DATABASE_URL`. Keep
+this file private and out of Git. The Google redirect URI must match the URI
+registered in Google Cloud Console.
 
-Start the backend in **Terminal 1**:
+Install backend dependencies, apply database migrations, and start FastAPI in
+**Terminal 1**:
 
 ```powershell
 Set-Location .\backend
 py -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m alembic upgrade head
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --reload
 ```
 
-Start the frontend in **Terminal 2**, from the repository root:
+Start the React app in **Terminal 2**, from the repository root:
 
 ```powershell
 npm install
 npm start
 ```
 
-Open `http://localhost:3000`. Keep both processes running. The frontend uses
-`http://127.0.0.1:8000` for the API by default. Check that the backend is
-available at `http://127.0.0.1:8000/health`.
+Open `http://localhost:3000`. The local API base URL is
+`http://localhost:8000`; check that the backend is available at
+`http://localhost:8000/health`.
 
-## Verify changes
+## API overview
 
-Run the React component and interaction checks from the repository root:
+- `GET /api/trending` — Apple Music chart.
+- `GET /api/search?q=...` — Deezer search through RapidAPI.
+- `/auth/google`, `/auth/signup`, `/auth/login`, `/auth/me`, `/auth/logout` —
+  account sign-in and session routes.
+- `/api/me/favorites`, `/api/me/recently-played` — account collections.
+- `/api/me/playlists` — account playlists and playlist tracks.
+
+See [backend/README.md](backend/README.md) for request details and migration
+instructions.
+
+## Regression checks
+
+Run the frontend regression suite from the repository root:
 
 ```powershell
 npm test -- --watchAll=false --runInBand
 ```
 
-The current checks cover Feed search states, Favorites persistence and removal,
+The starter suite covers Feed search states, Favorites persistence and removal,
 the Player empty state, and playback continuity while navigating between app
-sections.
+sections. Backend authentication, database, and playlist flows do not yet have
+automated regression tests.
 
-## Environment settings
+## Configuration
 
 | Variable | Used by | Purpose |
 | --- | --- | --- |
-| `RAPIDAPI_KEY` | Backend | Required key for Deezer search through RapidAPI. |
+| `RAPIDAPI_KEY` | Backend | Required RapidAPI key for Deezer search. |
 | `RAPIDAPI_HOST` | Backend | RapidAPI host; defaults to `deezerdevs-deezer.p.rapidapi.com`. |
-| `BEATNIK_CORS_ORIGINS` | Backend | Comma-separated exact frontend origins allowed to call the API. Defaults to the two local React origins. |
-| `REACT_APP_BACKEND_URL` | Frontend build | Base URL for FastAPI. Defaults to `http://127.0.0.1:8000`. |
+| `GOOGLE_CLIENT_ID` | Backend | Google OAuth web client ID. |
+| `GOOGLE_CLIENT_SECRET` | Backend | Google OAuth secret; keep private. |
+| `GOOGLE_REDIRECT_URI` | Backend | OAuth callback registered in Google Cloud Console. |
+| `BEATNIK_JWT_SECRET` | Backend | Signing key for Beatnik JWT sessions. |
+| `DATABASE_URL` | Backend | Neon PostgreSQL connection string; keep private. |
+| `REACT_APP_FRONTEND_URL` | Backend | Frontend destination after Google sign-in. |
+| `BEATNIK_CORS_ORIGINS` | Backend | Comma-separated allowed frontend origins. |
+| `REACT_APP_BACKEND_URL` | Frontend build | FastAPI base URL; defaults to `http://localhost:8000`. |
 
-Only put public configuration in `REACT_APP_` variables. React embeds those
-values into the browser build, so never put API keys or other secrets there.
+Only put public configuration in `REACT_APP_` variables. React embeds these
+values in the browser build, so secrets must stay in backend environment
+variables.
 
-## Deployment
+## Current limitations
 
-Deploy the React `build` output as a static site and run `backend/` as a Python
-ASGI web service. Configure the service settings as follows:
-
-**Frontend static site**
-
-- Build command: `npm install && npm run build`
-- Publish directory: `build`
-- Build environment variable: `REACT_APP_BACKEND_URL=https://<your-api-domain>`
-- Configure a single-page-app fallback so unknown paths serve `/index.html`;
-  this lets React Router routes such as `/trending` work after a page refresh.
-
-**FastAPI web service**
-
-- Root directory: `backend` (or set the service working directory to it)
-- Install command: `pip install -r requirements.txt`
-- Start command: `uvicorn app.main:app --host 0.0.0.0 --port <platform-port>`
-- Runtime environment variables: `RAPIDAPI_KEY` and
-  `BEATNIK_CORS_ORIGINS=https://<your-frontend-domain>`
-- Add `RAPIDAPI_HOST` only if using a non-default RapidAPI host.
-
-Use the actual HTTPS origins assigned by your host, with no path or trailing
-slash. If a custom domain or preview domain also needs access, add each exact
-origin as a comma-separated value. Set the frontend API URL and backend CORS
-origins to match the deployed services, then redeploy both so the settings take
-effect. Verify `/health`, `/api/trending`, and a Feed search on the live site.
-
-See [backend/README.md](backend/README.md) for the API routes and backend
-details.
+- Email addresses are not verified, and password reset is not implemented.
+- JWT sessions expire after one hour; there is no refresh-token flow.
+- Existing guest favorites and listening history are not imported into an
+  account automatically.
+- Playlists can be created, deleted, and populated, but not renamed or
+  reordered.
+- Offline downloads are not supported.

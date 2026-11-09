@@ -1,19 +1,32 @@
 .sidebar-container{
-    width: 100px;
+    width: 108px;
     height: 100%;
-    flex: 0 0 100px;
+    flex: 0 0 108px;
     display: flex;
     flex-direction:column;
     align-items:center;
     justify-content: space-between;
-    padding: 20px 8px 14px;
+    padding: 18px 8px 16px;
     border-right: 1px solid var(--beatnik-border);
     background: #141b25;
 }
-.profile-img{
-    width:50px;
-    height: 50px;
-    border-radius: 16px;
-    margin-top: 0;
-    object-fit: cover;
+
+.sidebar-nav {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top:105px;
+}
+
+.sidebar-account-nav {
+    width: 100%;
+    padding-top: 10px;
+    border-top: 1px solid var(--beatnik-border);
+}
+
+@media (max-height: 620px) {
+    .sidebar-container { padding-top: 10px; padding-bottom: 10px; }
+    .sidebar-nav { gap: 4px; }
+    .sidebar-account-nav { padding-top: 6px; }
 }

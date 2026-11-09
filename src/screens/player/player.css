@@ -51,7 +51,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid var(--beatnik-border);
   border-radius: 22px;
   color: var(--beatnik-text);
@@ -196,11 +196,13 @@
   cursor: pointer;
 }
 
-.favoriteContainer {
+.player-library-actions {
   width: 100%;
   margin-top: 10px;
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
 }
 
 .favoriteButton {
@@ -215,6 +217,57 @@
 .favoriteButton:hover {
   transform: scale(1.12);
 }
+
+.player-playlist-control { position: relative; }
+.player-add-playlist-button {
+  width: 40px;
+  height: 40px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--beatnik-border);
+  border-radius: 9px;
+  color: var(--beatnik-text);
+  background: var(--beatnik-surface-raised);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.player-add-playlist-button:hover { border-color: var(--beatnik-accent); }
+.player-playlist-menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  z-index: 5;
+  width: min(260px, calc(100vw - 48px));
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid var(--beatnik-border);
+  border-radius: 12px;
+  background: #17202b;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .4);
+  text-align: left;
+}
+.player-playlist-menu > button {
+  width: 100%;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 7px;
+  color: var(--beatnik-text);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.player-playlist-menu > button:hover { background: rgba(255, 255, 255, .08); }
+.player-playlist-menu > button:disabled { opacity: .6; cursor: wait; }
+.player-playlist-menu p { margin: 4px; color: var(--beatnik-muted); font-size: 12px; line-height: 1.5; }
+.player-playlist-menu a { color: var(--beatnik-accent-bright); }
+.player-playlist-menu .player-playlist-message { color: var(--beatnik-accent-bright); }
 
 .playbackError {
   margin: 12px 0 0;
@@ -240,5 +293,6 @@
   .rotate { animation: none; }
   .playButton,
   .sideButton,
-  .favoriteButton { transition: none; }
+  .favoriteButton,
+  .player-add-playlist-button { transition: none; }
 }

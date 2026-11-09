@@ -3,7 +3,7 @@
   z-index: 20;
   right: 0;
   bottom: 0;
-  left: 100px;
+  left: 108px;
   min-height: 76px;
   padding: 10px clamp(14px, 3vw, 32px);
   display: grid;
@@ -117,7 +117,7 @@
 
 @media (max-width: 700px) {
   .persistent-player-bar {
-    left: 100px;
+    left: 108px;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 10px;
     padding: 8px 12px;

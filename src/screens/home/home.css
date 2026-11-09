@@ -7,3 +7,52 @@
   color: var(--beatnik-text);
   background: var(--beatnik-bg);
 }
+
+.workspace-shell {
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.app-header {
+  height: 62px;
+  flex: 0 0 62px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 clamp(18px, 3vw, 38px);
+  border-bottom: 1px solid var(--beatnik-border);
+  background: #141b25;
+}
+
+.beatnik-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--beatnik-text);
+  font-size: 20px;
+  font-weight: 750;
+  letter-spacing: .01em;
+}
+
+.beatnik-brand-mark {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: #08120c;
+  background: var(--beatnik-accent-bright);
+  font-size: 15px;
+}
+
+.workspace-content {
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}

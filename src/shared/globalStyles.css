@@ -56,3 +56,19 @@ a {
   display: flex;
   background: var(--beatnik-bg);
 }
+
+.auth-callback-page {
+  flex: 1;
+  align-self: stretch;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 12px;
+  padding: 32px;
+  text-align: center;
+}
+
+.auth-callback-page h1,
+.auth-callback-page p { margin: 0; }
+.auth-callback-page p { color: var(--beatnik-muted); }
+.auth-callback-page a { color: var(--beatnik-accent-bright); }

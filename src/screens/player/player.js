@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './player.css';
-import { FaPlay, FaPause, FaHeart, FaRegHeart } from 'react-icons/fa';
+import { FaPlay, FaPause, FaHeart, FaList, FaPlus, FaRegHeart } from 'react-icons/fa';
 import {
   IoPlaySkipBack,
   IoPlaySkipForward,
@@ -9,6 +9,7 @@ import {
   IoVolumeHigh,
 } from 'react-icons/io5';
 import { usePlayer } from '../../context/PlayerContext';
+import backend from '../../api/backend';
 
 function formatTime(time) {
   if (!Number.isFinite(time) || time <= 0) return '00:00';
@@ -35,7 +36,13 @@ function Player() {
     seek,
     setVolume,
     toggleFavorite,
+    sessionUser,
   } = usePlayer();
+  const [playlistMenuOpen, setPlaylistMenuOpen] = useState(false);
+  const [playlists, setPlaylists] = useState([]);
+  const [loadingPlaylists, setLoadingPlaylists] = useState(false);
+  const [addingPlaylistId, setAddingPlaylistId] = useState(null);
+  const [playlistMessage, setPlaylistMessage] = useState('');
 
   if (!track) {
     return (
@@ -49,6 +56,39 @@ function Player() {
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
   const volumeProgress = volume * 100;
+
+  const openPlaylistMenu = async () => {
+    if (playlistMenuOpen) {
+      setPlaylistMenuOpen(false);
+      return;
+    }
+    setPlaylistMenuOpen(true);
+    setPlaylistMessage('');
+    if (!sessionUser) return;
+
+    setLoadingPlaylists(true);
+    try {
+      const response = await backend.get('/api/me/playlists');
+      setPlaylists(response.data?.data || []);
+    } catch {
+      setPlaylistMessage('Could not load your playlists. Please try again.');
+    } finally {
+      setLoadingPlaylists(false);
+    }
+  };
+
+  const addToPlaylist = async (playlist) => {
+    setAddingPlaylistId(playlist.id);
+    setPlaylistMessage('');
+    try {
+      await backend.post(`/api/me/playlists/${playlist.id}/tracks`, track);
+      setPlaylistMessage(`Added to ${playlist.name}.`);
+    } catch {
+      setPlaylistMessage(`Could not add this song to ${playlist.name}.`);
+    } finally {
+      setAddingPlaylistId(null);
+    }
+  };
 
   return (
     <div
@@ -135,7 +175,7 @@ function Player() {
         {playbackError && <p className="playbackError" role="alert">{playbackError}</p>}
         {collectionError && <p className="playbackError" role="alert">{collectionError}</p>}
 
-        <div className="favoriteContainer">
+        <div className="player-library-actions">
           <button
             type="button"
             aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
@@ -144,6 +184,42 @@ function Player() {
           >
             {isFavorite ? <FaHeart /> : <FaRegHeart />}
           </button>
+          <div className="player-playlist-control">
+            <button
+              type="button"
+              className="player-add-playlist-button"
+              aria-label="Add to playlist"
+              title="Add to playlist"
+              aria-expanded={playlistMenuOpen}
+              onClick={openPlaylistMenu}
+            >
+              <FaList aria-hidden="true" />
+            </button>
+            {playlistMenuOpen && (
+              <div className="player-playlist-menu" aria-label="Choose a playlist">
+                {!sessionUser ? (
+                  <p>Sign in to save songs to playlists. <Link to="/auth">Sign in</Link></p>
+                ) : loadingPlaylists ? (
+                  <p role="status">Loading playlists...</p>
+                ) : playlists.length ? (
+                  playlists.map((playlist) => (
+                    <button
+                      key={playlist.id}
+                      type="button"
+                      disabled={addingPlaylistId === playlist.id}
+                      onClick={() => addToPlaylist(playlist)}
+                    >
+                      <FaPlus aria-hidden="true" />
+                      {addingPlaylistId === playlist.id ? 'Adding...' : playlist.name}
+                    </button>
+                  ))
+                ) : (
+                  <p>You don’t have a playlist yet. <Link to="/library?section=playlists">Create one in Library</Link></p>
+                )}
+                {playlistMessage && <p className="player-playlist-message" role="status">{playlistMessage}</p>}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

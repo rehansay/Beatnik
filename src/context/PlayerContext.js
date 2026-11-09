@@ -1,8 +1,11 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import backend from '../api/backend';
 import {
   FAVORITES_KEY,
+  RECENTLY_PLAYED_KEY,
   addRecentlyPlayedTrack,
   readTrackList,
+  removeFavoriteTrack,
   subscribeToTrackList,
   toggleFavoriteTrack,
 } from '../utils/trackStorage';
@@ -20,13 +23,52 @@ export function PlayerProvider({ children }) {
   const [playbackError, setPlaybackError] = useState('');
   const [collectionError, setCollectionError] = useState('');
   const [favorites, setFavorites] = useState(() => readTrackList(FAVORITES_KEY));
+  const [recentlyPlayed, setRecentlyPlayed] = useState(() => readTrackList(RECENTLY_PLAYED_KEY));
+  const [sessionUser, setSessionUser] = useState(null);
+  const [databaseReady, setDatabaseReady] = useState(false);
 
   const track = queue[currentIndex] || null;
   const isFavorite = Boolean(track) && favorites.some(
     (savedTrack) => String(savedTrack.id) === String(track.id)
   );
 
-  useEffect(() => subscribeToTrackList(FAVORITES_KEY, setFavorites), []);
+  const refreshSession = useCallback(async () => {
+    const { data: user } = await backend.get('/auth/me');
+    setSessionUser(user);
+    const [favoritesResponse, recentResponse] = await Promise.all([
+      backend.get('/api/me/favorites'),
+      backend.get('/api/me/recently-played'),
+    ]);
+    setFavorites(favoritesResponse.data?.data || []);
+    setRecentlyPlayed(recentResponse.data?.data || []);
+    setDatabaseReady(true);
+    setCollectionError('');
+    return user;
+  }, []);
+
+  useEffect(() => {
+    let isActive = true;
+    refreshSession().catch((requestError) => {
+      if (!isActive) return;
+      if (requestError.response?.status === 401) {
+        setSessionUser(null);
+        setDatabaseReady(false);
+      } else {
+        setCollectionError('Could not load your saved collection from the database.');
+      }
+    });
+    return () => { isActive = false; };
+  }, [refreshSession]);
+
+  useEffect(() => {
+    if (databaseReady) return undefined;
+    const unsubscribeFavorites = subscribeToTrackList(FAVORITES_KEY, setFavorites);
+    const unsubscribeRecent = subscribeToTrackList(RECENTLY_PLAYED_KEY, setRecentlyPlayed);
+    return () => {
+      unsubscribeFavorites();
+      unsubscribeRecent();
+    };
+  }, [databaseReady]);
 
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = volume;
@@ -47,10 +89,21 @@ export function PlayerProvider({ children }) {
       playRequest
         .then(() => {
           setIsPlaying(true);
-          const result = addRecentlyPlayedTrack(selectedTrack);
-          setCollectionError(
-            result.success ? '' : 'Could not save this track to your listening history.'
-          );
+          if (sessionUser) {
+            if (!databaseReady) {
+              setCollectionError('Could not save this track to your database history.');
+              return;
+            }
+            backend.post('/api/me/recently-played', selectedTrack)
+              .then((response) => {
+                setRecentlyPlayed(response.data?.data || []);
+                setCollectionError('');
+              })
+              .catch(() => setCollectionError('Could not save this track to your listening history.'));
+          } else {
+            const result = addRecentlyPlayedTrack(selectedTrack);
+            setCollectionError(result.success ? '' : 'Could not save this track to your listening history.');
+          }
         })
         .catch(() => {
           setIsPlaying(false);
@@ -130,13 +183,63 @@ export function PlayerProvider({ children }) {
     if (audioRef.current) audioRef.current.volume = boundedVolume;
   };
 
-  const toggleFavorite = () => {
+  const toggleFavorite = async () => {
     if (!track) return;
+    if (sessionUser) {
+      if (!databaseReady) {
+        setCollectionError('Your database collection is not available right now.');
+        return;
+      }
+      try {
+        const response = isFavorite
+          ? await backend.delete(`/api/me/favorites/${encodeURIComponent(track.provider || 'deezer')}/${encodeURIComponent(track.id)}`)
+          : await backend.post('/api/me/favorites', track);
+        setFavorites(response.data?.data || []);
+        setCollectionError('');
+      } catch {
+        setCollectionError('Could not update Favorites. Please try again.');
+      }
+      return;
+    }
+
     const result = toggleFavoriteTrack(track);
     setFavorites(result.tracks);
     setCollectionError(
       result.success ? '' : 'Could not update Favorites. Check your browser storage settings.'
     );
+  };
+
+  const removeFavorite = async (id, provider = 'deezer') => {
+    if (sessionUser) {
+      if (!databaseReady) {
+        setCollectionError('Your database collection is not available right now.');
+        return false;
+      }
+      try {
+        const response = await backend.delete(
+          `/api/me/favorites/${encodeURIComponent(provider)}/${encodeURIComponent(id)}`
+        );
+        setFavorites(response.data?.data || []);
+        setCollectionError('');
+        return true;
+      } catch {
+        setCollectionError('Could not update Favorites. Please try again.');
+        return false;
+      }
+    }
+    const result = removeFavoriteTrack(id);
+    setFavorites(result.tracks);
+    setCollectionError(result.success ? '' : 'Could not update Favorites. Check your browser storage settings.');
+    return result.success;
+  };
+
+  const logout = async () => {
+    await backend.post('/auth/logout');
+    setSessionUser(null);
+    setDatabaseReady(false);
+    setFavorites(readTrackList(FAVORITES_KEY));
+    setRecentlyPlayed(readTrackList(RECENTLY_PLAYED_KEY));
+    setCollectionError('');
   };
 
   const value = {
@@ -150,6 +253,11 @@ export function PlayerProvider({ children }) {
     playbackError,
     collectionError,
     isFavorite,
+    favorites,
+    recentlyPlayed,
+    sessionUser,
+    refreshSession,
+    logout,
     selectQueue,
     togglePlayback,
     next,
@@ -157,6 +265,7 @@ export function PlayerProvider({ children }) {
     seek,
     setVolume,
     toggleFavorite,
+    removeFavorite,
   };
 
   return (
